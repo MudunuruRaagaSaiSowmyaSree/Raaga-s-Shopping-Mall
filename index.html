@@ -4,138 +4,8 @@
 <title>RAAGA'S SHOPPING MALL</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
+<link rel="stylesheet" href="style.css">
 
-body{
-font-family:Arial;
-margin:0;
-background:#f5f5f5;
-text-align:center;
-}
-
-/* HEADER */
-
-header{
-background:#222;
-color:white;
-padding:15px;
-font-size:24px;
-}
-
-/* PRODUCT GRID */
-
-.menu{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-padding:20px;
-}
-
-.card{
-background:white;
-border-radius:10px;
-box-shadow:0 0 10px #ccc;
-padding:10px;
-cursor:pointer;
-transition:.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-}
-
-.card img{
-width:100%;
-border-radius:8px;
-height:220px;
-object-fit:cover;
-}
-
-/* BUTTONS */
-
-button{
-padding:10px 18px;
-border:none;
-border-radius:20px;
-cursor:pointer;
-color:white;
-margin:5px;
-}
-
-.add{background:#e91e63;}
-.home{background:#4CAF50;}
-.back{background:#ff9800;}
-.checkout{background:#2196F3;}
-
-/* FLOATING CART */
-
-#cartIcon{
-position:fixed;
-right:20px;
-bottom:20px;
-background:#ff5722;
-color:white;
-font-size:20px;
-padding:15px 18px;
-border-radius:50px;
-cursor:pointer;
-box-shadow:0 0 10px gray;
-}
-
-#cartCount{
-background:white;
-color:black;
-border-radius:50%;
-padding:3px 8px;
-margin-left:5px;
-}
-
-/* PAGES */
-
-.page{display:none}
-
-/* CART TABLE */
-
-table{
-width:90%;
-margin:auto;
-border-collapse:collapse;
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #ccc;
-}
-
-/* BILL RECEIPT */
-
-.bill{
-background:white;
-width:350px;
-margin:auto;
-padding:25px;
-border-radius:10px;
-box-shadow:0 0 15px gray;
-}
-
-/* CHECKOUT ANIMATION */
-
-.loader{
-border:6px solid #f3f3f3;
-border-top:6px solid #2196F3;
-border-radius:50%;
-width:50px;
-height:50px;
-animation:spin 1s linear infinite;
-margin:auto;
-}
-
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-}
-
-</style>
 </head>
 
 <body>
@@ -145,81 +15,54 @@ margin:auto;
 <!-- HOME -->
 
 <div id="home" class="page" style="display:block">
-
 <div class="menu" id="productGrid"></div>
-
 </div>
 
 <!-- PRODUCT PAGE -->
 
 <div id="productPage" class="page">
-
 <h2 id="pName"></h2>
-
 <img id="pImg" width="280">
-
 <h3 id="pPrice"></h3>
 
 <button class="add" onclick="addToCart()">Add To Cart</button>
-
 <br><br>
-
 <button class="home" onclick="goHome()">Home</button>
-
 </div>
 
 <!-- CART PAGE -->
 
 <div id="cartPage" class="page">
-
 <h2>🛒 Your Cart</h2>
-
 <table id="cartTable"></table>
-
 <h3 id="totalPrice"></h3>
 
 <button class="checkout" onclick="checkout()">Checkout</button>
-
 <br><br>
-
 <button class="home" onclick="goHome()">Home</button>
-
 </div>
 
-<!-- CHECKOUT LOADER -->
+<!-- LOADING -->
 
 <div id="loadingPage" class="page">
-
 <h2>Processing Payment...</h2>
-
 <div class="loader"></div>
-
 </div>
 
-<!-- BILL PAGE -->
+<!-- BILL -->
 
 <div id="billPage" class="page">
-
 <div class="bill">
-
 <h2>🧾 RAAGA'S SHOPPING MALL</h2>
-
 <hr>
-
 <div id="billItems"></div>
-
 <h3 id="billTotal"></h3>
-
 <hr>
-
 <h3>THANK YOU. VISIT AGAIN 😊</h3>
-
 </div>
 
 <br>
-
 <button class="home" onclick="goHome()">Home</button>
-
 </div>
 
 <!-- CART ICON -->
@@ -228,199 +71,7 @@ margin:auto;
 🛒 <span id="cartCount">0</span>
 </div>
 
-<script>
-
-/* PRODUCTS */
-
-const products=[
-{name:"Black Classic",price:500,img:"./images/Black(1).jpg"},
-{name:"White Casual",price:450,img:"./images/white (1).jpg"},
-{name:"Red Sport",price:600,img:"./images/RedSport.jpg"},
-{name:"Blue Style",price:550,img:"./images/Navy Blue Shirt.jpg"},
-{name:"Green Casual",price:480,img:"./images/GreenCasual.jpg"},
-{name:"Yellow Fashion",price:470,img:"./images/Yellow (1).jpg"},
-{name:"Grey Style",price:520,img:"./images/GreyStyle.jpg"},
-{name:"Orange Trend",price:510,img:"./images/Orange (1).jpg"},
-{name:"Pink Fashion",price:530,img:"./images/PinkFashion.jpg"},
-{name:"Sky Blue",price:490,img:"./images/SkyBlue.jpg"},
-{name:"Purple Style",price:560,img:"./images/PurpleStyle.jpg"},
-{name:"Modern Black",price:600,img:"./images/ModernBlack.jpg"}
-]
-
-let cart=[]
-let currentProduct=null
-
-/* LOAD PRODUCTS */
-
-let grid=document.getElementById("productGrid")
-
-products.forEach((p,i)=>{
-
-grid.innerHTML+=`
-<div class="card" onclick="openProduct(${i})">
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<p>₹${p.price}</p>
-</div>
-`
-
-})
-
-function show(page){
-
-document.querySelectorAll(".page").forEach(p=>p.style.display="none")
-
-document.getElementById(page).style.display="block"
-
-}
-
-function goHome(){
-
-show("home")
-
-}
-
-function openProduct(i){
-
-currentProduct=products[i]
-
-document.getElementById("pName").innerText=currentProduct.name
-document.getElementById("pImg").src=currentProduct.img
-document.getElementById("pPrice").innerText="Price ₹"+currentProduct.price
-
-show("productPage")
-
-}
-
-/* ADD TO CART */
-
-function addToCart(){
-
-let item=cart.find(x=>x.name===currentProduct.name)
-
-if(item){
-item.qty++
-}else{
-cart.push({...currentProduct,qty:1})
-}
-
-updateCart()
-
-alert("Added to cart")
-
-}
-
-function updateCart(){
-
-document.getElementById("cartCount").innerText=
-cart.reduce((sum,i)=>sum+i.qty,0)
-
-}
-
-/* OPEN CART */
-
-function openCart(){
-
-show("cartPage")
-
-let table=document.getElementById("cartTable")
-
-table.innerHTML=`<tr>
-<th>Item</th>
-<th>Price</th>
-<th>Qty</th>
-<th>Remove</th>
-</tr>`
-
-let total=0
-
-cart.forEach((item,i)=>{
-
-total+=item.price*item.qty
-
-table.innerHTML+=`
-<tr>
-<td>${item.name}</td>
-<td>₹${item.price}</td>
-<td>
-<input type="number" value="${item.qty}" min="1"
-onchange="changeQty(${i},this.value)">
-</td>
-<td>
-<button onclick="removeItem(${i})">❌</button>
-</td>
-</tr>
-`
-
-})
-
-document.getElementById("totalPrice").innerText="Total: ₹"+total
-
-}
-
-/* CHANGE QTY */
-
-function changeQty(i,q){
-
-cart[i].qty=parseInt(q)
-
-openCart()
-
-updateCart()
-
-}
-
-/* REMOVE ITEM */
-
-function removeItem(i){
-
-cart.splice(i,1)
-
-openCart()
-
-updateCart()
-
-}
-
-/* CHECKOUT */
-
-function checkout(){
-
-show("loadingPage")
-
-setTimeout(generateBill,2000)
-
-}
-
-/* BILL */
-
-function generateBill(){
-
-show("billPage")
-
-let div=document.getElementById("billItems")
-
-div.innerHTML=""
-
-let total=0
-
-cart.forEach(item=>{
-
-div.innerHTML+=`<p>${item.name} x ${item.qty} - ₹${item.price*item.qty}</p>`
-
-total+=item.price*item.qty
-
-})
-
-document.getElementById("billTotal").innerText="Total Bill : ₹"+total
-
-cart=[]
-
-updateCart()
-
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
